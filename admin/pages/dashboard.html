@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — HoneyGold Admin</title>
+  <link rel="stylesheet" href="/admin/assets/css/admin.css">
+</head>
+<body>
+
+<div class="admin-layout">
+
+  <!-- ── SIDEBAR ──────────────────────────────── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo-mark">🍯</div>
+      <span class="logo-text">HoneyGold</span>
+      <span class="sidebar-badge">Admin</span>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">Main</div>
+      <a href="#" class="sidebar-link active" onclick="showSection('products')">
+        <span class="icon">📦</span> Products
+      </a>
+      <a href="/" class="sidebar-link" target="_blank">
+        <span class="icon">🌐</span> View Store
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <span id="sb-user">admin</span>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ─────────────────────────────────── -->
+  <div class="admin-main">
+
+    <!-- Topbar -->
+    <div class="admin-topbar">
+      <span class="topbar-title" id="page-title">Products</span>
+      <div class="topbar-user">
+        <div class="topbar-avatar">👤</div>
+        <span id="topbar-username">admin</span>
+        <button class="topbar-logout" onclick="logout()">Logout</button>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="admin-content">
+
+      <!-- Stats -->
+      <div class="stats-row" id="stats-row">
+        <div class="stat-card">
+          <div class="stat-card-info">
+            <div class="stat-card-label">Total Products</div>
+            <div class="stat-card-value" id="stat-total">–</div>
+          </div>
+          <div class="stat-card-icon">📦</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-info">
+            <div class="stat-card-label">Categories</div>
+            <div class="stat-card-value" id="stat-cats">–</div>
+          </div>
+          <div class="stat-card-icon">🏷️</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-info">
+            <div class="stat-card-label">In Stock</div>
+            <div class="stat-card-value" id="stat-stock">–</div>
+          </div>
+          <div class="stat-card-icon">✅</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-info">
+            <div class="stat-card-label">Avg Price</div>
+            <div class="stat-card-value" id="stat-avg">–</div>
+          </div>
+          <div class="stat-card-icon">💰</div>
+        </div>
+      </div>
+
+      <!-- Products Card -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">All Products</span>
+          <div style="display:flex;gap:1rem;align-items:center;">
+            <div class="search-box">
+              <span>🔍</span>
+              <input type="text" id="search-input" placeholder="Search products…" oninput="filterTable()">
+            </div>
+            <button class="btn btn-primary" onclick="openModal()">
+              + Add Product
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <table id="products-table">
+            <thead>
+              <tr>
+                <th style="width:50px"></th>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Weight</th>
+                <th>Stock</th>
+                <th>Badge</th>
+                <th style="width:120px">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="table-body">
+              <tr><td colspan="8" style="text-align:center;padding:3rem;color:var(--text-light);">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /admin-content -->
+  </div><!-- /admin-main -->
+</div><!-- /admin-layout -->
+
+<!-- ── ADD / EDIT MODAL ──────────────────────── -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-title">Add Product</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="edit-id">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Product Name *</label>
+          <input type="text" class="form-control" id="f-name" placeholder="Wild Forest Honey">
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <select class="form-control" id="f-category">
+            <option>Pure</option>
+            <option>Organic</option>
+            <option>Raw</option>
+            <option>Premium</option>
+            <option>Infused</option>
+            <option>Creamed</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Price ($) *</label>
+          <input type="number" class="form-control" id="f-price" placeholder="24.99" step="0.01" min="0">
+        </div>
+        <div class="form-group">
+          <label>Weight</label>
+          <input type="text" class="form-control" id="f-weight" placeholder="500g">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Stock</label>
+          <input type="number" class="form-control" id="f-stock" placeholder="0" min="0">
+        </div>
+        <div class="form-group">
+          <label>Badge Label</label>
+          <select class="form-control" id="f-badge">
+            <option value="">None</option>
+            <option value="Bestseller">Bestseller</option>
+            <option value="New">New</option>
+            <option value="Organic">Organic</option>
+            <option value="Premium">Premium</option>
+            <option value="Limited">Limited</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <textarea class="form-control" id="f-description" placeholder="Describe this honey variety…"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Product Image</label>
+        <div class="image-upload-area" id="upload-area">
+          <input type="file" id="f-image" accept="image/*" onchange="previewImage(event)">
+          <div class="upload-icon">📸</div>
+          <div class="upload-text">Click to upload or drag an image here<br><span style="font-size:0.75rem;color:var(--text-light);">JPG, PNG, WEBP — max 5MB</span></div>
+          <img class="upload-preview" id="image-preview" src="" alt="Preview">
+        </div>
+        <div id="current-image-info" style="font-size:0.78rem;color:var(--text-light);margin-top:6px;"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal()" style="border:1.5px solid var(--border);color:var(--text-mid);">Cancel</button>
+      <button class="btn btn-primary" onclick="saveProduct()" id="save-btn">Save Product</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── DELETE CONFIRM ────────────────────────── -->
+<div class="modal-overlay" id="delete-overlay">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-header">
+      <span class="modal-title">Delete Product</span>
+      <button class="modal-close" onclick="closeDelete()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:var(--text-mid);line-height:1.7;">
+        Are you sure you want to delete <strong id="delete-name"></strong>? This action cannot be undone.
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeDelete()" style="border:1.5px solid var(--border);color:var(--text-mid);">Cancel</button>
+      <button class="btn btn-danger" onclick="confirmDelete()" id="delete-btn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/admin/assets/js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Honey Collection — HoneyGold</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <style>
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-right: 0.5rem;
+    }
+
+    .filter-btn {
+      padding: 8px 20px;
+      background: transparent;
+      border: 1.5px solid var(--border);
+      border-radius: 24px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--text-mid);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-btn:hover {
+      border-color: var(--gold-deep);
+      color: var(--gold-deep);
+    }
+
+    .filter-btn.active {
+      background: var(--brown-deep);
+      border-color: var(--brown-deep);
+      color: var(--cream);
+    }
+
+    .products-count {
+      margin-left: auto;
+      font-size: 0.82rem;
+      color: var(--text-light);
+    }
+
+    .products-section { padding: 60px 5% 80px; }
+
+    .no-results {
+      text-align: center;
+      padding: 5rem 2rem;
+      color: var(--text-light);
+    }
+    .no-results .icon { font-size: 3rem; margin-bottom: 1rem; }
+    .no-results h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      color: var(--brown-mid);
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <div class="logo-mark">🍯</div>
+    <span class="logo-text">HoneyGold</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/products">Products</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="/contact">Contact</a></li>
+    <li><a href="/products" class="nav-cta">Shop Now</a></li>
+  </ul>
+  <button class="hamburger"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="page-hero honeycomb-bg">
+  <div class="section-label">Artisan Collection</div>
+  <h1 class="section-title">Pure Honey, Every Kind</h1>
+  <div class="divider" style="margin: 1rem auto;"></div>
+  <p class="section-subtitle">From delicate acacia blossoms to bold buckwheat — a honey for every palate, season, and purpose.</p>
+</div>
+
+<section class="products-section">
+  <div class="filter-bar" id="filter-bar">
+    <span class="filter-label">Filter:</span>
+    <button class="filter-btn active" data-cat="all">All</button>
+    <button class="filter-btn" data-cat="Pure">Pure</button>
+    <button class="filter-btn" data-cat="Organic">Organic</button>
+    <button class="filter-btn" data-cat="Raw">Raw</button>
+    <button class="filter-btn" data-cat="Premium">Premium</button>
+    <button class="filter-btn" data-cat="Infused">Infused</button>
+    <button class="filter-btn" data-cat="Creamed">Creamed</button>
+    <span class="products-count" id="products-count"></span>
+  </div>
+
+  <div class="products-grid" id="products-container">
+    <div class="loading"><div class="spinner"></div> Loading products…</div>
+  </div>
+</section>
+
+<div id="footer"></div>
+
+<script src="/assets/js/main.js"></script>
+<script>
+  let allProducts = [];
+  let activeFilter = 'all';
+
+  async function loadProducts() {
+    const container = document.getElementById('products-container');
+    try {
+      allProducts = await fetchProducts();
+      // Check for URL param
+      const urlCat = new URLSearchParams(window.location.search).get('cat');
+      if (urlCat) {
+        activeFilter = urlCat;
+        document.querySelectorAll('.filter-btn').forEach(b => {
+          b.classList.toggle('active', b.dataset.cat === urlCat || (urlCat && b.dataset.cat === 'all' && urlCat === 'all'));
+        });
+      }
+      renderProducts();
+    } catch {
+      container.innerHTML = '<p style="color:var(--text-light);padding:2rem;">Could not load products. Is the server running?</p>';
+    }
+  }
+
+  function renderProducts() {
+    const container = document.getElementById('products-container');
+    const count = document.getElementById('products-count');
+    const filtered = activeFilter === 'all'
+      ? allProducts
+      : allProducts.filter(p => p.category === activeFilter);
+
+    count.textContent = `${filtered.length} product${filtered.length !== 1 ? 's' : ''}`;
+
+    if (filtered.length === 0) {
+      container.innerHTML = `
+        <div class="no-results">
+          <div class="icon">🍯</div>
+          <h3>No products in this category yet</h3>
+          <p>Check back soon for new arrivals.</p>
+        </div>`;
+      return;
+    }
+    container.innerHTML = filtered.map(createProductCard).join('');
+  }
+
+  document.getElementById('filter-bar').addEventListener('click', (e) => {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.dataset.cat;
+    renderProducts();
+  });
+
+  document.addEventListener('DOMContentLoaded', loadProducts);
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+{
+  "products": [
+    {
+      "id": "d1c935b2-630d-409b-a654-61b76ebdae17",
+      "name": "عسل زهور",
+      "price": 15,
+      "category": "Pure",
+      "weight": "500",
+      "description": "",
+      "image": "/uploads/product-77125cd9-6a05-44f0-9d77-c1b7df3d4566.png",
+      "badge": "",
+      "stock": 2
+    },
+    {
+      "id": "47edaba8-50c6-492f-84cb-7c947ee82b36",
+      "name": "عسل سدر",
+      "price": 20,
+      "category": "Pure",
+      "weight": "1000",
+      "description": "",
+      "image": "/uploads/product-8fd3cd15-134c-4abd-b219-c74c1e1e5842.png",
+      "badge": "",
+      "stock": 6
+    }
+  ],
+  "admin": {
+    "username": "admin",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi"
+  }
+}

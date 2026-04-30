@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#F5EDD8"/>
+  <text x="50%" y="42%" text-anchor="middle" font-size="64" dy=".3em">🍯</text>
+  <text x="50%" y="68%" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#A0704A" dy=".3em">HoneyGold</text>
+</svg>

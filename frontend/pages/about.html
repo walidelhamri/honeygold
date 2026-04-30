@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Story — HoneyGold</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <style>
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+      padding: 80px 8%;
+    }
+
+    .story-visual {
+      background: var(--cream-dark);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10rem;
+      height: 420px;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .story-visual::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='52' viewBox='0 0 60 52' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15 0L30 8.66V26l-15 8.66L0 26V8.66L15 0zm30 0L60 8.66V26l-15 8.66L30 26V8.66L45 0zM0 34.64L15 43.3V52H0V34.64zm60 0V52H45V43.3l15-8.66z' fill='%23B8860B' fill-opacity='0.06'/%3E%3C/svg%3E");
+    }
+
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .value-card {
+      background: var(--cream);
+      padding: 3rem 2rem;
+      text-align: center;
+      transition: background 0.3s;
+    }
+
+    .value-card:hover { background: var(--cream-dark); }
+
+    .value-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .value-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      color: var(--brown-deep);
+      margin-bottom: 0.8rem;
+    }
+
+    .value-text {
+      font-size: 0.86rem;
+      color: var(--text-mid);
+      line-height: 1.75;
+    }
+
+    .team-section { padding: 80px 5%; background: var(--cream-dark); }
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .team-card {
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      transition: box-shadow 0.3s;
+    }
+
+    .team-card:hover { box-shadow: var(--shadow); }
+
+    .team-avatar {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: var(--cream-dark);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.5rem;
+      margin: 0 auto 1.2rem;
+      border: 2px solid var(--border);
+    }
+
+    .team-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      color: var(--brown-deep);
+      margin-bottom: 4px;
+    }
+
+    .team-role {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold-deep);
+      margin-bottom: 0.8rem;
+    }
+
+    .team-bio {
+      font-size: 0.84rem;
+      color: var(--text-mid);
+      line-height: 1.7;
+    }
+
+    .timeline {
+      max-width: 680px;
+      margin: 3rem auto 0;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 1.5rem;
+      padding-bottom: 2.5rem;
+      position: relative;
+    }
+
+    .timeline-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 40px; top: 28px;
+      bottom: 0; width: 1px;
+      background: var(--border);
+    }
+
+    .timeline-year {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--gold-deep);
+      text-align: right;
+      padding-top: 3px;
+    }
+
+    .timeline-content h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      color: var(--brown-deep);
+      margin-bottom: 4px;
+    }
+
+    .timeline-content p {
+      font-size: 0.86rem;
+      color: var(--text-mid);
+      line-height: 1.7;
+    }
+
+    @media (max-width: 900px) {
+      .story-grid { grid-template-columns: 1fr; gap: 2rem; padding: 60px 5%; }
+      .values-grid { grid-template-columns: 1fr; }
+      .team-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      .team-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <div class="logo-mark">🍯</div>
+    <span class="logo-text">HoneyGold</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/products">Products</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="/contact">Contact</a></li>
+    <li><a href="/products" class="nav-cta">Shop Now</a></li>
+  </ul>
+  <button class="hamburger"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="page-hero honeycomb-bg">
+  <div class="section-label">Our Story</div>
+  <h1 class="section-title">Born From a Love<br>of the Hive</h1>
+  <div class="divider" style="margin:1rem auto;"></div>
+  <p class="section-subtitle">What began as a backyard beekeeping experiment became a dedication to sharing the world's finest, most honest honey.</p>
+</div>
+
+<!-- STORY -->
+<section class="story-grid">
+  <div class="story-visual">🐝</div>
+  <div>
+    <div class="section-label">The Beginning</div>
+    <h2 class="section-title">A Single Hive in 2014</h2>
+    <div class="divider"></div>
+    <p style="color:var(--text-mid);line-height:1.85;margin-bottom:1.2rem;">
+      HoneyGold was founded by two beekeepers who were frustrated by what passed for "honey" on supermarket shelves. 
+      Ultra-filtered, heated, blended — stripped of everything that makes honey extraordinary.
+    </p>
+    <p style="color:var(--text-mid);line-height:1.85;margin-bottom:2rem;">
+      They started with one hive in rural Portugal, selling jars at local markets. Word spread. 
+      Demand grew. Today we partner with 28 apiaries across 9 countries — but the mission hasn't changed: 
+      <strong style="color:var(--brown-mid);">real honey for real people.</strong>
+    </p>
+    <a href="/products" class="btn btn-primary">See Our Collection</a>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="section" style="background:var(--cream-dark);padding-top:0;">
+  <div style="text-align:center;padding:60px 5% 3rem;">
+    <div class="section-label">What We Stand For</div>
+    <h2 class="section-title">Our Values</h2>
+    <div class="divider" style="margin:1rem auto;"></div>
+  </div>
+  <div class="values-grid">
+    <div class="value-card">
+      <div class="value-icon">🧪</div>
+      <div class="value-title">Radical Transparency</div>
+      <p class="value-text">Every batch has a QR code linking to lab results, apiary location, and bloom season data. No secrets.</p>
+    </div>
+    <div class="value-card">
+      <div class="value-icon">🐝</div>
+      <div class="value-title">Bee Welfare First</div>
+      <p class="value-text">We never over-harvest. Bees keep more than half of what they produce. A healthy hive means exceptional honey.</p>
+    </div>
+    <div class="value-card">
+      <div class="value-icon">🤝</div>
+      <div class="value-title">Fair Beekeeper Pay</div>
+      <p class="value-text">Our partner beekeepers earn 3× the commodity rate. Good honey requires generous investment in people.</p>
+    </div>
+    <div class="value-card">
+      <div class="value-icon">♻️</div>
+      <div class="value-title">Zero Waste Packaging</div>
+      <p class="value-text">Glass jars, natural wax seals, and recycled cardboard. We obsess over our environmental footprint.</p>
+    </div>
+    <div class="value-card">
+      <div class="value-icon">🌡️</div>
+      <div class="value-title">Raw Integrity</div>
+      <p class="value-text">Honey that has been heated above 95°F loses enzymes and aroma. We cold-process, always. Period.</p>
+    </div>
+    <div class="value-card">
+      <div class="value-icon">🌍</div>
+      <div class="value-title">Global, Local Heart</div>
+      <p class="value-text">We source from 9 countries but every beekeeper is known by name. Scale doesn't have to mean distance.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="team-section" id="beekeepers">
+  <div style="text-align:center;">
+    <div class="section-label">The People</div>
+    <h2 class="section-title">Meet Our Team</h2>
+    <div class="divider" style="margin:1rem auto 0;"></div>
+  </div>
+  <div class="team-grid">
+    <div class="team-card">
+      <div class="team-avatar">👩‍🌾</div>
+      <div class="team-name">Elena Vasquez</div>
+      <div class="team-role">Co-Founder & Head Beekeeper</div>
+      <p class="team-bio">A third-generation beekeeper from Extremadura, Spain. Elena leads sourcing and apiary partnerships, with 18 years of hands-on hive management experience.</p>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">👨‍🔬</div>
+      <div class="team-name">James Okafor</div>
+      <div class="team-role">Co-Founder & Quality Director</div>
+      <p class="team-bio">Former food scientist turned honey obsessive. James designed our lab testing protocols and ensures every batch meets our exacting standards before it ships.</p>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">👩‍🍳</div>
+      <div class="team-name">Sophie Müller</div>
+      <div class="team-role">Product Development</div>
+      <p class="team-bio">Trained pastry chef and flavor specialist. Sophie develops our infused and blended varieties, pairing honey varietals with botanicals from around the world.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="section" style="background:white;">
+  <div style="text-align:center;margin-bottom:1rem;">
+    <div class="section-label">Milestones</div>
+    <h2 class="section-title">A Decade of Honey</h2>
+    <div class="divider" style="margin:1rem auto;"></div>
+  </div>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-year">2014</div>
+      <div class="timeline-content">
+        <h4>First Hive</h4>
+        <p>Elena and James set up their first hive in rural Portugal, start selling at Cascais farmers market.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2016</div>
+      <div class="timeline-content">
+        <h4>HoneyGold Founded</h4>
+        <p>Company officially registered. First website launched, 3 products, 120 jars in the first month.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2018</div>
+      <div class="timeline-content">
+        <h4>International Sourcing</h4>
+        <p>Partnerships with apiaries in New Zealand, Morocco, and Greece. Manuka Reserve launched to instant acclaim.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2021</div>
+      <div class="timeline-content">
+        <h4>50,000 Customers</h4>
+        <p>Crossed the 50k customer mark. Launched the Beekeeper Partnership Fund, supporting 8 small apiaries.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2024</div>
+      <div class="timeline-content">
+        <h4>Today & Beyond</h4>
+        <p>28 apiaries, 12 varieties, and still growing. Sophie joins to expand the infused line. The hive lives on.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="footer"></div>
+<script src="/assets/js/main.js"></script>
+</body>
+</html>

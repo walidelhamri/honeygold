@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HoneyGold — Pure, Organic, Premium Honey</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <style>
+    /
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding-top: 72px;
+    }
+
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 5% 80px 8%;
+      background: var(--cream);
+    }
+
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-eyebrow .line {
+      width: 40px; height: 1px;
+      background: var(--gold-deep);
+    }
+
+    .hero-eyebrow span {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold-deep);
+    }
+
+    .hero-title {
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-weight: 300;
+      color: var(--brown-deep);
+      line-height: 1.08;
+      margin-bottom: 1.8rem;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold-deep);
+      font-weight: 400;
+    }
+
+    .hero-text {
+      font-size: 1.05rem;
+      color: var(--text-mid);
+      max-width: 440px;
+      line-height: 1.85;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 2.5rem;
+      margin-top: 3.5rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .stat-item {}
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem;
+      font-weight: 600;
+      color: var(--brown-deep);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-top: 4px;
+    }
+
+    .hero-visual {
+      background: var(--cream-dark);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-visual-inner {
+      width: 100%; height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px;
+    }
+
+    
+    .hero-jar {
+      position: relative;
+      text-align: center;
+    }
+
+    .hero-jar .jar-emoji {
+      font-size: 15rem;
+      line-height: 1;
+      filter: drop-shadow(0 24px 40px rgba(184,134,11,0.25));
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .hero-visual::before {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(244,197,66,0.18) 0%, transparent 70%);
+      border-radius: 50%;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .hero-visual .honey-drop {
+      position: absolute;
+      background: var(--gold-light);
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      opacity: 0.15;
+    }
+    .honey-drop.d1 { width: 120px; height: 160px; top: 10%; right: 10%; transform: rotate(20deg); }
+    .honey-drop.d2 { width: 80px; height: 110px; bottom: 15%; left: 8%; transform: rotate(-15deg); }
+
+    
+    .marquee-strip {
+      background: var(--brown-deep);
+      padding: 14px 0;
+      overflow: hidden;
+    }
+
+    .marquee-inner {
+      display: flex;
+      animation: marquee 22s linear infinite;
+      white-space: nowrap;
+    }
+
+    .marquee-item {
+      padding: 0 2rem;
+      font-size: 0.76rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold-pale);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .marquee-item::after {
+      content: '◆';
+      color: var(--gold-deep);
+      font-size: 0.5rem;
+    }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    
+    .features {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .feature-item {
+      padding: 3rem 2.5rem;
+      text-align: center;
+      border-right: 1px solid var(--border);
+      transition: background 0.3s;
+    }
+
+    .feature-item:last-child { border-right: none; }
+    .feature-item:hover { background: var(--cream-dark); }
+
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .feature-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      color: var(--brown-deep);
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-text {
+      font-size: 0.84rem;
+      color: var(--text-light);
+      line-height: 1.7;
+    }
+
+    
+    .products-preview { background: var(--cream); }
+    .products-preview-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 3rem;
+    }
+
+   
+    .origin {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 520px;
+    }
+
+    .origin-visual {
+      background: var(--cream-dark) url("data:image/svg+xml,%3Csvg width='60' height='52' viewBox='0 0 60 52' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15 0L30 8.66V26l-15 8.66L0 26V8.66L15 0zm30 0L60 8.66V26l-15 8.66L30 26V8.66L45 0zM0 34.64L15 43.3V52H0V34.64zm60 0V52H45V43.3l15-8.66z' fill='%23B8860B' fill-opacity='0.07'/%3E%3C/svg%3E");
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .origin-content {
+      padding: 80px 8%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: var(--cream);
+    }
+
+    .origin-list {
+      list-style: none;
+      margin: 2rem 0;
+    }
+
+    .origin-list li {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.9rem;
+      color: var(--text-mid);
+    }
+
+    .origin-list li::before {
+      content: '✦';
+      color: var(--gold-deep);
+      font-size: 0.6rem;
+    }
+
+
+    .testimonial-section {
+      background: var(--brown-deep);
+      color: var(--cream);
+      text-align: center;
+      padding: 80px 5%;
+    }
+
+    .testimonial-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      font-style: italic;
+      font-weight: 300;
+      max-width: 700px;
+      margin: 0 auto 1.5rem;
+      line-height: 1.5;
+      color: var(--gold-pale);
+    }
+
+    .testimonial-author {
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(253,240,192,0.5);
+    }
+
+    
+    .newsletter {
+      background: var(--gold-pale);
+      padding: 64px 5%;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 0;
+      max-width: 480px;
+      margin: 1.5rem auto 0;
+      box-shadow: 0 4px 20px rgba(184,134,11,0.15);
+    }
+
+    .newsletter-form input {
+      flex: 1;
+      padding: 14px 20px;
+      border: 1.5px solid var(--border);
+      border-right: none;
+      border-radius: 2px 0 0 2px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      background: white;
+    }
+
+    .newsletter-form input:focus { border-color: var(--gold-deep); }
+
+    .newsletter-form .btn {
+      border-radius: 0 2px 2px 0;
+    }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-content { padding: 60px 5%; order: 2; }
+      .hero-visual { min-height: 380px; order: 1; }
+      .hero-jar .jar-emoji { font-size: 9rem; }
+      .features { grid-template-columns: 1fr 1fr; }
+      .feature-item:nth-child(2) { border-right: none; }
+      .origin { grid-template-columns: 1fr; }
+      .origin-visual { min-height: 240px; }
+    }
+
+    @media (max-width: 600px) {
+      .features { grid-template-columns: 1fr; }
+      .feature-item { border-right: none; border-bottom: 1px solid var(--border); }
+      .hero-stats { gap: 1.5rem; }
+      .newsletter-form { flex-direction: column; }
+      .newsletter-form input { border-right: 1.5px solid var(--border); border-bottom: none; border-radius: 2px 2px 0 0; }
+      .newsletter-form .btn { border-radius: 0 0 2px 2px; }
+      .products-preview-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <div class="logo-mark">🍯</div>
+    <span class="logo-text">HoneyGold</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/products">Products</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="/contact">Contact</a></li>
+    <li><a href="/products" class="nav-cta">Shop Now</a></li>
+  </ul>
+  <button class="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <div class="line"></div>
+      <span>Pure &amp; Organic</span>
+    </div>
+    <h1 class="hero-title">
+      Nature's Purest<br>
+      <em>Golden Gift</em>
+    </h1>
+    <p class="hero-text">
+      Harvested by hand from trusted apiaries across pristine landscapes. 
+      Unfiltered, raw, and rich with natural enzymes — honey the way it was meant to be.
+    </p>
+    <div class="hero-actions">
+      <a href="/products" class="btn btn-primary">Explore Collection</a>
+      <a href="/about" class="btn btn-outline">Our Story</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">12+</div>
+        <div class="stat-label">Honey Varieties</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Raw & Organic</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">50k+</div>
+        <div class="stat-label">Happy Customers</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="honey-drop d1"></div>
+    <div class="honey-drop d2"></div>
+    <div class="hero-jar">
+      <div class="jar-emoji">🍯</div>
+    </div>
+  </div>
+</section>
+
+
+<div class="marquee-strip">
+  <div class="marquee-inner">
+   
+    <span class="marquee-item">Free Shipping Over $50</span>
+    <span class="marquee-item">100% Raw & Unfiltered</span>
+    <span class="marquee-item">Certified Organic</span>
+    <span class="marquee-item">Lab-Tested Purity</span>
+    <span class="marquee-item">Sustainably Sourced</span>
+    <span class="marquee-item">Artisan Harvested</span>
+    <span class="marquee-item">Free Shipping Over $50</span>
+    <span class="marquee-item">100% Raw & Unfiltered</span>
+    <span class="marquee-item">Certified Organic</span>
+    <span class="marquee-item">Lab-Tested Purity</span>
+    <span class="marquee-item">Sustainably Sourced</span>
+    <span class="marquee-item">Artisan Harvested</span>
+  </div>
+</div>
+
+<div class="features">
+  <div class="feature-item">
+    <div class="feature-icon">🌿</div>
+    <div class="feature-title">Truly Raw</div>
+    <p class="feature-text">Never heated above 95°F, preserving all natural enzymes, pollen, and propolis.</p>
+  </div>
+  <div class="feature-item">
+    <div class="feature-icon">🌍</div>
+    <div class="feature-title">Single Origin</div>
+    <p class="feature-text">Every jar is traceable to a specific apiary and bloom season. Transparency always.</p>
+  </div>
+  <div class="feature-item">
+    <div class="feature-icon">🔬</div>
+    <div class="feature-title">Lab Tested</div>
+    <p class="feature-text">Each batch undergoes independent quality testing for purity and authenticity.</p>
+  </div>
+  <div class="feature-item">
+    <div class="feature-icon">♻️</div>
+    <div class="feature-title">Sustainable</div>
+    <p class="feature-text">Glass jars, minimal packaging, and fair pay for every beekeeper we partner with.</p>
+  </div>
+</div>
+
+<section class="section products-preview">
+  <div class="products-preview-header">
+    <div>
+      <div class="section-label">Our Collection</div>
+      <h2 class="section-title">Featured Honeys</h2>
+      <div class="divider"></div>
+    </div>
+    <a href="/products" class="btn btn-outline">View All Products</a>
+  </div>
+  <div class="products-grid" id="featured-products">
+    <div class="loading"><div class="spinner"></div> Loading products…</div>
+  </div>
+</section>
+
+
+<section class="origin">
+  <div class="origin-visual">🐝</div>
+  <div class="origin-content">
+    <div class="section-label">From Hive to Home</div>
+    <h2 class="section-title">Crafted With<br>Quiet Devotion</h2>
+    <div class="divider"></div>
+    <p style="color:var(--text-mid);line-height:1.85;margin-bottom:1rem;">
+      Every jar of HoneyGold begins with a beekeeper who has dedicated their life to the ancient craft. 
+      We source exclusively from small, family-run apiaries that share our commitment to the bees and the land.
+    </p>
+    <ul class="origin-list">
+      <li>Hand-selected from small family apiaries</li>
+      <li>Cold-extracted to preserve nutritional value</li>
+      <li>Bottled in recycled glass within 48 hours</li>
+      <li>No added sugars, syrups, or preservatives</li>
+      <li>Independently tested for authenticity</li>
+    </ul>
+    <a href="/about" class="btn btn-primary" style="width:fit-content">Meet Our Beekeepers</a>
+  </div>
+</section>
+
+<section class="testimonial-section">
+  <div class="section-label" style="color:var(--gold-light)">What Our Customers Say</div>
+  <blockquote class="testimonial-quote">
+    "This is the first honey that actually tastes like something. Complex, floral, alive. 
+    I won't go back to anything else."
+  </blockquote>
+  <div class="testimonial-author">— Amira S., verified customer ★★★★★</div>
+</section>
+
+<section class="newsletter">
+  <div class="section-label">Stay in the loop</div>
+  <h2 class="section-title">Join the Hive</h2>
+  <p style="color:var(--text-mid);margin-top:.5rem;">
+    New varieties, seasonal harvests, and members-only discounts — delivered gently to your inbox.
+  </p>
+  <div class="newsletter-form">
+    <input type="email" placeholder="Your email address">
+    <button class="btn btn-primary" onclick="subscribeNewsletter()">Subscribe</button>
+  </div>
+</section>
+
+<!-- ── FOOTER ─────────────────────────────────── -->
+<div id="footer"></div>
+
+<script src="/assets/js/main.js"></script>
+<script>
+  async function loadFeaturedProducts() {
+    const container = document.getElementById('featured-products');
+    try {
+      const products = await fetchProducts();
+      const featured = products.slice(0, 3);
+      if (featured.length === 0) {
+        container.innerHTML = '<p style="color:var(--text-light)">No products available.</p>';
+        return;
+      }
+      container.innerHTML = featured.map(createProductCard).join('');
+    } catch {
+      container.innerHTML = '<p style="color:var(--text-light)">Could not load products.</p>';
+    }
+  }
+
+  function subscribeNewsletter() {
+    const input = document.querySelector('.newsletter-form input');
+    if (!input.value.includes('@')) {
+      showToast('Please enter a valid email', 'error');
+      return;
+    }
+    input.value = '';
+    showToast('Welcome to the HoneyGold family! 🍯', 'success');
+  }
+
+  document.addEventListener('DOMContentLoaded', loadFeaturedProducts);
+</script>
+</body>
+</html>
