@@ -23,7 +23,7 @@ app.use('/api/auth', require('./routes/auth'));
 
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/pages/index.html'));
+  res.send('HoneyGold backend is running');
 });
 app.get('/products', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/pages/products.html'));
