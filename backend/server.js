@@ -47,9 +47,6 @@ app.get('/admin/dashboard', (req, res) => {
 const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 
-app.listen(PORT, () => {
-  console.log(`\n🍯 HoneyGold Server running at http://localhost:${PORT}`);
-  console.log(`   Frontend: http://localhost:${PORT}`);
-  console.log(`   Admin:    http://localhost:${PORT}/admin`);
-  console.log(`   API:      http://localhost:${PORT}/api/products\n`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(HoneyGold Server running on port ${PORT});
 });
