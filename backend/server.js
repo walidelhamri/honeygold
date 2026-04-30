@@ -48,5 +48,5 @@ const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(HoneyGold Server running on port ${PORT});
+  console.log(`HoneyGold Server running on port ${PORT}`);
 });
