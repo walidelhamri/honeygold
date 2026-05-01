@@ -3,31 +3,71 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cart - HoneyGold</title>
+  <title>Your Cart - HoneyGold</title>
+
   <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
 
-  <header>
-    <nav>
+  <nav>
+    <div class="nav-logo">
+      <div class="logo-mark">🍯</div>
+      <span class="logo-text">HoneyGold</span>
+    </div>
+
+    <div class="nav-links">
       <a href="/">Home</a>
       <a href="/products">Products</a>
       <a href="/about">About</a>
       <a href="/contact">Contact</a>
-      <a href="/cart">Cart <span id="cart-count">0</span></a>
-    </nav>
-  </header>
+      <a href="/cart" class="active">Cart <span id="cart-count">0</span></a>
+    </div>
 
-  <main>
-    <h1>Your Cart</h1>
+    <button class="hamburger">☰</button>
+  </nav>
 
-    <div id="cart-items"></div>
+  <main class="cart-page">
+    <section class="cart-hero">
+      <span class="section-badge">Shopping Cart</span>
+      <h1>Your Cart</h1>
+      <p>Review your selected honey products before checkout.</p>
+    </section>
 
-    <h2>Total: <span id="cart-total">0</span> €</h2>
+    <section class="cart-layout">
+      <div class="cart-items-card">
+        <h2>Cart Items</h2>
+        <div id="cart-items"></div>
+      </div>
 
-    <button id="clear-cart">Clear Cart</button>
+      <aside class="cart-summary">
+        <h2>Order Summary</h2>
+
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <strong>$<span id="cart-subtotal">0.00</span></strong>
+        </div>
+
+        <div class="summary-row">
+          <span>Shipping</span>
+          <strong>Free</strong>
+        </div>
+
+        <div class="summary-total">
+          <span>Total</span>
+          <strong>$<span id="cart-total">0.00</span></strong>
+        </div>
+
+        <button class="btn btn-primary checkout-btn">Checkout</button>
+        <button id="clear-cart" class="btn btn-ghost clear-btn">Clear Cart</button>
+
+        <a href="/products" class="continue-shopping">← Continue Shopping</a>
+      </aside>
+    </section>
   </main>
 
+  <div id="footer"></div>
+
+  <script src="/js/main.js"></script>
   <script src="/js/cart.js"></script>
 </body>
 </html>
