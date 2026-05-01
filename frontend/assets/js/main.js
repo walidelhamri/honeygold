@@ -221,9 +221,72 @@ function buildFooter(container) {
     </footer>
   `;
 }
+// ─── RENDER PRODUCTS ON PAGES ─────────────────────────────────
+function findProductsContainer() {
+  const selectors = [
+    '#products-grid',
+    '#productsGrid',
+    '#featured-products',
+    '#featuredProducts',
+    '.products-grid',
+    '.featured-products',
+    '[data-products-grid]'
+  ];
+
+  for (const selector of selectors) {
+    const element = document.querySelector(selector);
+    if (element) return element;
+  }
+
+  const elements = Array.from(document.querySelectorAll('main *'));
+  return elements.find(element =>
+    element.children.length === 0 &&
+    element.textContent.trim().toLowerCase().includes('loading products')
+  );
+}
+
+async function renderProductsOnPage() {
+  const productsContainer = findProductsContainer();
+
+  if (!productsContainer) return;
+
+  productsContainer.classList.add('products-grid');
+
+  try {
+    const products = await fetchProducts();
+
+    if (!products.length) {
+      productsContainer.innerHTML = `
+        <div class="empty-cart">
+          <h3>No products found</h3>
+          <p>Please add products from the admin dashboard.</p>
+        </div>
+      `;
+      return;
+    }
+
+    const isHomePage = window.location.pathname === '/';
+    const productsToShow = isHomePage ? products.slice(0, 3) : products;
+
+    productsContainer.innerHTML = productsToShow
+      .map(product => createProductCard(product))
+      .join('');
+
+  } catch (error) {
+    console.error('Error loading products:', error);
+
+    productsContainer.innerHTML = `
+      <div class="empty-cart">
+        <h3>Could not load products</h3>
+        <p>Please try again later.</p>
+      </div>
+    `;
+  }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   initNav();
   initCartButtons();
   buildFooter(document.querySelector('#footer'));
+  renderProductsOnPage();
 });
