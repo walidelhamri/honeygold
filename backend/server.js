@@ -34,6 +34,9 @@ app.get('/about', (req, res) => {
 app.get('/contact', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/pages/contact.html'));
 });
+app.get('/cart', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/pages/cart.html'));
+});
 
 
 app.get('/admin', (req, res) => {
