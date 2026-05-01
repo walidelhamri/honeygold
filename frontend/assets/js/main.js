@@ -7,17 +7,18 @@ function initNav() {
   const navLinks = document.querySelector('.nav-links');
   const currentPath = window.location.pathname;
 
-  // Active link
   document.querySelectorAll('.nav-links a').forEach(link => {
-    if (link.getAttribute('href') === currentPath) link.classList.add('active');
+    if (link.getAttribute('href') === currentPath) {
+      link.classList.add('active');
+    }
   });
 
-  // Scroll shadow
   window.addEventListener('scroll', () => {
-    nav?.classList.toggle('scrolled', window.scrollY > 20);
+    if (nav) {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    }
   });
 
-  // Mobile menu
   hamburger?.addEventListener('click', () => {
     navLinks?.classList.toggle('open');
   });
@@ -26,12 +27,17 @@ function initNav() {
 // ─── API ───────────────────────────────────────────────────────
 async function fetchProducts() {
   const res = await fetch(`${API_BASE}/products`);
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch products');
+  }
+
   const json = await res.json();
   return json.data || [];
 }
 
-// ─── SAFE TEXT HELPERS ─────────────────────────────────────────
-function escapeAttr(value) {
+// ─── SAFE TEXT HELPER ──────────────────────────────────────────
+function escapeHtml(value) {
   return String(value || '')
     .replaceAll('&', '&amp;')
     .replaceAll('"', '&quot;')
@@ -42,48 +48,124 @@ function escapeAttr(value) {
 
 // ─── PRODUCT CARD ──────────────────────────────────────────────
 function createProductCard(product) {
-  const productId = product._id || product.id;
+  const productId = product.id || product._id;
   const productName = product.name || 'Product';
   const productPrice = Number(product.price || 0);
   const productImage = product.image || '/assets/images/placeholder.jpg';
+  const productWeight = product.weight || '';
+  const productCategory = product.category || 'Pure';
 
   const badgeHtml = product.badge
-    ? `<span class="product-badge ${escapeAttr(product.badge.toLowerCase())}">${escapeAttr(product.badge)}</span>`
+    ? `<span class="product-badge ${escapeHtml(String(product.badge).toLowerCase())}">
+        ${escapeHtml(product.badge)}
+      </span>`
     : '';
 
   return `
     <div class="product-card">
       <div class="product-card-image">
-        <img src="${escapeAttr(productImage)}" alt="${escapeAttr(productName)}" 
-             onerror="this.src='/assets/images/placeholder.jpg'">
+        <img 
+          src="${escapeHtml(productImage)}" 
+          alt="${escapeHtml(productName)}"
+          onerror="this.src='/assets/images/placeholder.jpg'"
+        >
         ${badgeHtml}
       </div>
 
       <div class="product-card-body">
-        <div class="product-category">${escapeAttr(product.category || 'Pure')}</div>
-        <h3 class="product-name">${escapeAttr(productName)}</h3>
-        <p class="product-desc">${escapeAttr(product.description || '')}</p>
+        <div class="product-category">${escapeHtml(productCategory)}</div>
+
+        <h3 class="product-name">${escapeHtml(productName)}</h3>
+
+        <p class="product-desc">
+          ${escapeHtml(product.description || '')}
+        </p>
 
         <div class="product-footer">
           <div>
             <div class="product-price">$${productPrice.toFixed(2)}</div>
-            <div class="product-weight">${escapeAttr(product.weight || '')}</div>
+            <div class="product-weight">${escapeHtml(productWeight)}</div>
           </div>
 
           <button 
-  class="btn btn-ghost add-to-cart"
-  data-id="${product.id}"
-  data-name="${product.name}"
-  data-price="${product.price}"
-  data-image="${product.image || '/assets/images/placeholder.jpg'}"
-  data-weight="${product.weight || ''}"
->
-  Add to Cart
-</button>
+            class="btn btn-ghost add-to-cart"
+            data-id="${escapeHtml(productId)}"
+            data-name="${escapeHtml(productName)}"
+            data-price="${escapeHtml(productPrice)}"
+            data-image="${escapeHtml(productImage)}"
+            data-weight="${escapeHtml(productWeight)}"
+          >
+            Add to Cart
+          </button>
         </div>
       </div>
     </div>
   `;
+}
+
+// ─── RENDER PRODUCTS ───────────────────────────────────────────
+function findProductsContainer() {
+  const selectors = [
+    '#products-grid',
+    '#productsGrid',
+    '#featured-products',
+    '#featuredProducts',
+    '.products-grid',
+    '.featured-products',
+    '[data-products-grid]'
+  ];
+
+  for (const selector of selectors) {
+    const element = document.querySelector(selector);
+    if (element) return element;
+  }
+
+  const elements = Array.from(document.querySelectorAll('main *'));
+
+  return elements.find(element => {
+    const text = element.textContent.trim().toLowerCase();
+    return element.children.length === 0 && text.includes('loading products');
+  });
+}
+
+async function renderProductsOnPage() {
+  const productsContainer = findProductsContainer();
+
+  if (!productsContainer) return;
+
+  productsContainer.classList.add('products-grid');
+
+  try {
+    const products = await fetchProducts();
+
+    if (!products.length) {
+      productsContainer.innerHTML = `
+        <div class="empty-cart">
+          <h3>No products found</h3>
+          <p>Please add products from the admin dashboard.</p>
+          <a href="/admin" class="btn btn-primary">Go to Admin</a>
+        </div>
+      `;
+      return;
+    }
+
+    const isHomePage = window.location.pathname === '/';
+    const productsToShow = isHomePage ? products.slice(0, 3) : products;
+
+    productsContainer.innerHTML = productsToShow
+      .map(product => createProductCard(product))
+      .join('');
+
+  } catch (error) {
+    console.error('Error loading products:', error);
+
+    productsContainer.innerHTML = `
+      <div class="empty-cart">
+        <h3>Could not load products</h3>
+        <p>Please try again later.</p>
+      </div>
+    `;
+  }
 }
 
 // ─── CART ──────────────────────────────────────────────────────
@@ -100,12 +182,13 @@ function updateCartCount() {
   const count = cart.reduce((total, item) => total + Number(item.quantity || 0), 0);
 
   const cartCount = document.querySelector('#cart-count');
+
   if (cartCount) {
     cartCount.textContent = count;
   }
 }
 
-function addToCart(product) {
+function addProductToCart(product) {
   let cart = getCart();
 
   const existingProduct = cart.find(item => item.id === product.id);
@@ -136,6 +219,7 @@ function addToCart(product) {
 function initCartButtons() {
   document.addEventListener('click', event => {
     const button = event.target.closest('.add-to-cart');
+
     if (!button) return;
 
     const product = {
@@ -146,7 +230,7 @@ function initCartButtons() {
       weight: button.dataset.weight
     };
 
-    addToCart(product);
+    addProductToCart(product);
   });
 
   updateCartCount();
@@ -165,8 +249,13 @@ function showToast(msg, type = 'success') {
   toast.textContent = msg;
   toast.className = `toast ${type}`;
 
-  setTimeout(() => toast.classList.add('show'), 10);
-  setTimeout(() => toast.classList.remove('show'), 3000);
+  setTimeout(() => {
+    toast.classList.add('show');
+  }, 10);
+
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 3000);
 }
 
 // ─── FOOTER BUILDER ────────────────────────────────────────────
@@ -181,7 +270,9 @@ function buildFooter(container) {
             <div class="logo-mark">🍯</div>
             <span class="logo-text">HoneyGold</span>
           </div>
-          <p>Pure, organic, and wildly delicious honey — sourced from trusted apiaries and delivered to your door.</p>
+          <p>
+            Pure, organic, and wildly delicious honey — sourced from trusted apiaries and delivered to your door.
+          </p>
         </div>
 
         <div>
@@ -221,69 +312,8 @@ function buildFooter(container) {
     </footer>
   `;
 }
-// ─── RENDER PRODUCTS ON PAGES ─────────────────────────────────
-function findProductsContainer() {
-  const selectors = [
-    '#products-grid',
-    '#productsGrid',
-    '#featured-products',
-    '#featuredProducts',
-    '.products-grid',
-    '.featured-products',
-    '[data-products-grid]'
-  ];
 
-  for (const selector of selectors) {
-    const element = document.querySelector(selector);
-    if (element) return element;
-  }
-
-  const elements = Array.from(document.querySelectorAll('main *'));
-  return elements.find(element =>
-    element.children.length === 0 &&
-    element.textContent.trim().toLowerCase().includes('loading products')
-  );
-}
-
-async function renderProductsOnPage() {
-  const productsContainer = findProductsContainer();
-
-  if (!productsContainer) return;
-
-  productsContainer.classList.add('products-grid');
-
-  try {
-    const products = await fetchProducts();
-
-    if (!products.length) {
-      productsContainer.innerHTML = `
-        <div class="empty-cart">
-          <h3>No products found</h3>
-          <p>Please add products from the admin dashboard.</p>
-        </div>
-      `;
-      return;
-    }
-
-    const isHomePage = window.location.pathname === '/';
-    const productsToShow = isHomePage ? products.slice(0, 3) : products;
-
-    productsContainer.innerHTML = productsToShow
-      .map(product => createProductCard(product))
-      .join('');
-
-  } catch (error) {
-    console.error('Error loading products:', error);
-
-    productsContainer.innerHTML = `
-      <div class="empty-cart">
-        <h3>Could not load products</h3>
-        <p>Please try again later.</p>
-      </div>
-    `;
-  }
-}
-
+// ─── INIT ──────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   initNav();
   initCartButtons();
