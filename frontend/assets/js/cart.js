@@ -1,73 +1,123 @@
-function getCart() {
+function getCartItems() {
   return JSON.parse(localStorage.getItem('cart')) || [];
 }
 
-function saveCart(cart) {
+function saveCartItems(cart) {
   localStorage.setItem('cart', JSON.stringify(cart));
 }
 
-function updateCartCount() {
-  const cart = getCart();
-  const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+function updateCartNumber() {
+  const cart = getCartItems();
+  const count = cart.reduce((total, item) => total + Number(item.quantity || 0), 0);
 
-  const cartCount = document.getElementById('cart-count');
+  const cartCount = document.querySelector('#cart-count');
   if (cartCount) {
     cartCount.textContent = count;
   }
 }
 
 function renderCart() {
-  const cartItems = document.getElementById('cart-items');
-  const cartTotal = document.getElementById('cart-total');
+  const cartItemsContainer = document.querySelector('#cart-items');
+  const subtotalEl = document.querySelector('#cart-subtotal');
+  const totalEl = document.querySelector('#cart-total');
 
-  if (!cartItems || !cartTotal) return;
+  if (!cartItemsContainer) return;
 
-  const cart = getCart();
+  const cart = getCartItems();
 
   if (cart.length === 0) {
-    cartItems.innerHTML = '<p>Your cart is empty.</p>';
-    cartTotal.textContent = '0';
-    updateCartCount();
+    cartItemsContainer.innerHTML = `
+      <div class="empty-cart">
+        <div class="empty-cart-icon">🛒</div>
+        <h3>Your cart is empty</h3>
+        <p>Add some pure HoneyGold products to your cart.</p>
+        <a href="/products" class="btn btn-primary">Shop Products</a>
+      </div>
+    `;
+
+    subtotalEl.textContent = '0.00';
+    totalEl.textContent = '0.00';
+    updateCartNumber();
     return;
   }
 
-  let total = 0;
+  let subtotal = 0;
 
-  cartItems.innerHTML = cart.map(item => {
-    const itemTotal = Number(item.price) * item.quantity;
-    total += itemTotal;
+  cartItemsContainer.innerHTML = cart.map(item => {
+    const price = Number(item.price || 0);
+    const quantity = Number(item.quantity || 1);
+    const itemTotal = price * quantity;
+    subtotal += itemTotal;
 
     return `
       <div class="cart-item">
-        <img src="${item.image}" alt="${item.name}" width="80">
-        <div>
-          <h3>${item.name}</h3>
-          <p>Price: ${item.price} €</p>
-          <p>Quantity: ${item.quantity}</p>
-          <button onclick="removeFromCart('${item.id}')">Remove</button>
+        <div class="cart-item-image">
+          <img src="${item.image || '/assets/images/placeholder.jpg'}" 
+               alt="${item.name}" 
+               onerror="this.src='/assets/images/placeholder.jpg'">
         </div>
+
+        <div class="cart-item-info">
+          <h3>${item.name}</h3>
+          <p>${item.weight || ''}</p>
+          <strong>$${price.toFixed(2)}</strong>
+        </div>
+
+        <div class="cart-quantity">
+          <button onclick="changeQuantity('${item.id}', -1)">−</button>
+          <span>${quantity}</span>
+          <button onclick="changeQuantity('${item.id}', 1)">+</button>
+        </div>
+
+        <div class="cart-item-total">
+          $${itemTotal.toFixed(2)}
+        </div>
+
+        <button class="remove-item" onclick="removeFromCart('${item.id}')">×</button>
       </div>
     `;
   }).join('');
 
-  cartTotal.textContent = total.toFixed(2);
-  updateCartCount();
+  subtotalEl.textContent = subtotal.toFixed(2);
+  totalEl.textContent = subtotal.toFixed(2);
+
+  updateCartNumber();
 }
 
-function removeFromCart(id) {
-  let cart = getCart();
-  cart = cart.filter(item => item.id !== id);
-  saveCart(cart);
+function changeQuantity(id, amount) {
+  const cart = getCartItems();
+  const item = cart.find(product => product.id === id);
+
+  if (!item) return;
+
+  item.quantity += amount;
+
+  if (item.quantity <= 0) {
+    removeFromCart(id);
+    return;
+  }
+
+  saveCartItems(cart);
   renderCart();
 }
 
-const clearCartButton = document.getElementById('clear-cart');
+function removeFromCart(id) {
+  let cart = getCartItems();
+  cart = cart.filter(item => item.id !== id);
 
-if (clearCartButton) {
-  clearCartButton.addEventListener('click', () => {
-    localStorage.removeItem('cart');
-    renderCart();
-  });
+  saveCartItems(cart);
+  renderCart();
 }
 
-renderCart();
+document.addEventListener('DOMContentLoaded', () => {
+  renderCart();
+
+  const clearCartBtn = document.querySelector('#clear-cart');
+
+  if (clearCartBtn) {
+    clearCartBtn.addEventListener('click', () => {
+      localStorage.removeItem('cart');
+      renderCart();
+    });
+  }
+});
