@@ -71,15 +71,15 @@ function createProductCard(product) {
           </div>
 
           <button 
-            class="btn btn-ghost add-to-cart"
-            data-id="${escapeAttr(productId)}"
-            data-name="${escapeAttr(productName)}"
-            data-price="${escapeAttr(productPrice)}"
-            data-image="${escapeAttr(productImage)}"
-            data-weight="${escapeAttr(product.weight || '')}"
-          >
-            Add to Cart
-          </button>
+  class="btn btn-ghost add-to-cart"
+  data-id="${product.id}"
+  data-name="${product.name}"
+  data-price="${product.price}"
+  data-image="${product.image || '/assets/images/placeholder.jpg'}"
+  data-weight="${product.weight || ''}"
+>
+  Add to Cart
+</button>
         </div>
       </div>
     </div>
