@@ -14,12 +14,12 @@ function initNav() {
 
   // Scroll shadow
   window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 20);
+    nav?.classList.toggle('scrolled', window.scrollY > 20);
   });
 
   // Mobile menu
   hamburger?.addEventListener('click', () => {
-    navLinks.classList.toggle('open');
+    navLinks?.classList.toggle('open');
   });
 }
 
@@ -30,29 +30,54 @@ async function fetchProducts() {
   return json.data || [];
 }
 
+// ─── SAFE TEXT HELPERS ─────────────────────────────────────────
+function escapeAttr(value) {
+  return String(value || '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;');
+}
+
 // ─── PRODUCT CARD ──────────────────────────────────────────────
 function createProductCard(product) {
+  const productId = product._id || product.id;
+  const productName = product.name || 'Product';
+  const productPrice = Number(product.price || 0);
+  const productImage = product.image || '/assets/images/placeholder.jpg';
+
   const badgeHtml = product.badge
-    ? `<span class="product-badge ${product.badge.toLowerCase()}">${product.badge}</span>` : '';
-  const imgSrc = product.image || '/assets/images/placeholder.jpg';
+    ? `<span class="product-badge ${escapeAttr(product.badge.toLowerCase())}">${escapeAttr(product.badge)}</span>`
+    : '';
 
   return `
     <div class="product-card">
       <div class="product-card-image">
-        <img src="${imgSrc}" alt="${product.name}" 
+        <img src="${escapeAttr(productImage)}" alt="${escapeAttr(productName)}" 
              onerror="this.src='/assets/images/placeholder.jpg'">
         ${badgeHtml}
       </div>
+
       <div class="product-card-body">
-        <div class="product-category">${product.category || 'Pure'}</div>
-        <h3 class="product-name">${product.name}</h3>
-        <p class="product-desc">${product.description || ''}</p>
+        <div class="product-category">${escapeAttr(product.category || 'Pure')}</div>
+        <h3 class="product-name">${escapeAttr(productName)}</h3>
+        <p class="product-desc">${escapeAttr(product.description || '')}</p>
+
         <div class="product-footer">
           <div>
-            <div class="product-price">$${parseFloat(product.price).toFixed(2)}</div>
-            <div class="product-weight">${product.weight || ''}</div>
+            <div class="product-price">$${productPrice.toFixed(2)}</div>
+            <div class="product-weight">${escapeAttr(product.weight || '')}</div>
           </div>
-          <button class="btn btn-ghost" onclick="addToCart('${product.id}', '${product.name}')">
+
+          <button 
+            class="btn btn-ghost add-to-cart"
+            data-id="${escapeAttr(productId)}"
+            data-name="${escapeAttr(productName)}"
+            data-price="${escapeAttr(productPrice)}"
+            data-image="${escapeAttr(productImage)}"
+            data-weight="${escapeAttr(product.weight || '')}"
+          >
             Add to Cart
           </button>
         </div>
@@ -61,21 +86,85 @@ function createProductCard(product) {
   `;
 }
 
-// ─── CART (simple) ─────────────────────────────────────────────
-function addToCart(id, name) {
-  showToast(`${name} added to cart`, 'success');
+// ─── CART ──────────────────────────────────────────────────────
+function getCart() {
+  return JSON.parse(localStorage.getItem('cart')) || [];
+}
+
+function saveCart(cart) {
+  localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+function updateCartCount() {
+  const cart = getCart();
+  const count = cart.reduce((total, item) => total + Number(item.quantity || 0), 0);
+
+  const cartCount = document.querySelector('#cart-count');
+  if (cartCount) {
+    cartCount.textContent = count;
+  }
+}
+
+function addToCart(product) {
+  let cart = getCart();
+
+  const existingProduct = cart.find(item => item.id === product.id);
+
+  if (existingProduct) {
+    existingProduct.quantity += 1;
+  } else {
+    cart.push({
+      id: product.id,
+      name: product.name,
+      price: Number(product.price),
+      image: product.image,
+      weight: product.weight,
+      quantity: 1
+    });
+  }
+
+  saveCart(cart);
+  updateCartCount();
+
+  showToast(`${product.name} added to cart`, 'success');
+
+  setTimeout(() => {
+    window.location.href = '/cart';
+  }, 500);
+}
+
+function initCartButtons() {
+  document.addEventListener('click', event => {
+    const button = event.target.closest('.add-to-cart');
+    if (!button) return;
+
+    const product = {
+      id: button.dataset.id,
+      name: button.dataset.name,
+      price: button.dataset.price,
+      image: button.dataset.image,
+      weight: button.dataset.weight
+    };
+
+    addToCart(product);
+  });
+
+  updateCartCount();
 }
 
 // ─── TOAST ─────────────────────────────────────────────────────
 function showToast(msg, type = 'success') {
   let toast = document.querySelector('.toast');
+
   if (!toast) {
     toast = document.createElement('div');
     toast.className = 'toast';
     document.body.appendChild(toast);
   }
+
   toast.textContent = msg;
   toast.className = `toast ${type}`;
+
   setTimeout(() => toast.classList.add('show'), 10);
   setTimeout(() => toast.classList.remove('show'), 3000);
 }
@@ -83,6 +172,7 @@ function showToast(msg, type = 'success') {
 // ─── FOOTER BUILDER ────────────────────────────────────────────
 function buildFooter(container) {
   if (!container) return;
+
   container.innerHTML = `
     <footer>
       <div class="footer-grid">
@@ -93,6 +183,7 @@ function buildFooter(container) {
           </div>
           <p>Pure, organic, and wildly delicious honey — sourced from trusted apiaries and delivered to your door.</p>
         </div>
+
         <div>
           <div class="footer-heading">Shop</div>
           <ul class="footer-links">
@@ -102,6 +193,7 @@ function buildFooter(container) {
             <li><a href="/products?cat=Premium">Premium</a></li>
           </ul>
         </div>
+
         <div>
           <div class="footer-heading">Company</div>
           <ul class="footer-links">
@@ -110,6 +202,7 @@ function buildFooter(container) {
             <li><a href="/contact">Contact</a></li>
           </ul>
         </div>
+
         <div>
           <div class="footer-heading">Support</div>
           <ul class="footer-links">
@@ -120,6 +213,7 @@ function buildFooter(container) {
           </ul>
         </div>
       </div>
+
       <div class="footer-bottom">
         <span>© 2024 HoneyGold. All rights reserved.</span>
         <span>Pure honey. Pure intention.</span>
@@ -130,5 +224,6 @@ function buildFooter(container) {
 
 document.addEventListener('DOMContentLoaded', () => {
   initNav();
+  initCartButtons();
   buildFooter(document.querySelector('#footer'));
 });
